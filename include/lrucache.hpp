@@ -13,6 +13,7 @@
 #include <cstddef>
 #include <stdexcept>
 #include <mutex>
+#include <iostream>
 
 namespace cache {
 
@@ -28,17 +29,15 @@ public:
 	
 	void put(const key_t& key, const value_t& value) {
         std::mutex m;
+        m.lock();
 
 		auto it = _cache_items_map.find(key);
-
-		m.lock();
 		_cache_items_list.push_front(key_value_pair_t(key, value));
 		if (it != _cache_items_map.end()) {
 			_cache_items_list.erase(it->second);
 			_cache_items_map.erase(it);
 		}
 		_cache_items_map[key] = _cache_items_list.begin();
-		m.unlock();
 		
 		if (_cache_items_map.size() > _max_size) {
 			auto last = _cache_items_list.end();
@@ -46,6 +45,8 @@ public:
 			_cache_items_map.erase(last->first);
 			_cache_items_list.pop_back();
 		}
+
+        m.unlock();
 	}
 	
 	const value_t& get(const key_t& key) {
