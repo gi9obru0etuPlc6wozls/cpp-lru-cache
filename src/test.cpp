@@ -1,8 +1,9 @@
+#include <thread>
 #include "lrucache.hpp"
 #include "gtest/gtest.h"
 
-const int NUM_OF_TEST1_RECORDS = 100;
-const int NUM_OF_TEST2_RECORDS = 100;
+const int NUM_OF_TEST1_RECORDS = 50000;
+const int NUM_OF_TEST2_RECORDS = 50000;
 const int TEST2_CACHE_CAPACITY = 50;
 
 TEST(CacheTest, SimplePut) {
@@ -40,6 +41,23 @@ TEST(CacheTest1, KeepsAllValuesWithinCapacity) {
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    int ret = RUN_ALL_TESTS();
-    return ret;
+    //int ret = RUN_ALL_TESTS();
+    std::thread t1(RUN_ALL_TESTS);
+    std::thread t2(RUN_ALL_TESTS);
+    std::thread t3(RUN_ALL_TESTS);
+    std::thread t4(RUN_ALL_TESTS);
+    std::thread t5(RUN_ALL_TESTS);
+    std::thread t6(RUN_ALL_TESTS);
+    std::thread t7(RUN_ALL_TESTS);
+    std::thread t8(RUN_ALL_TESTS);
+
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
+    t5.join();
+    t6.join();
+    t7.join();
+    t8.join();
+    return 0;
 }
